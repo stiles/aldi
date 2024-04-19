@@ -20,12 +20,8 @@ def parse_products(soup, week_date):
         
         for product in section.find_all("a", class_="box--wrapper ym-gl ym-g25"):
             description_tag = product.find("div", class_="box--description--header")
-            if description_tag:
-                parts = [desc.strip() for desc in description_tag.contents if isinstance(desc, str) and desc.strip()]
-                product_brand = parts[0] if parts else ''
-                product_description = parts[1] if len(parts) > 1 else ''
-            else:
-                product_brand, product_description = None, None
+            parts = [desc.strip() for desc in description_tag.contents if isinstance(desc, str) and desc.strip()] if description_tag else [None, None]
+            product_brand, product_description = parts if len(parts) == 2 else (None, None)
             
             price_value_tag = product.find("span", class_="box--value")
             price_decimal_tag = product.find("span", class_="box--decimal")
@@ -49,6 +45,18 @@ def parse_products(soup, week_date):
     return products
 
 def main():
+    s3_resource = boto3.resource('s3')
+    bucket_name = 'stilesdata.com'
+    archive_key = 'aldi/aldi_finds_archive.csv'
+
+    # Try to load the existing archive
+    try:
+        obj = s3_resource.Object(bucket_name, archive_key)
+        archive_data = obj.get()['Body'].read().decode('utf-8')
+        df_archive = pd.read_csv(StringIO(archive_data))
+    except s3_resource.meta.client.exceptions.NoSuchKey:
+        df_archive = pd.DataFrame()
+
     current_finds_url = "https://www.aldi.us/weekly-specials/this-weeks-aldi-finds"
     upcoming_finds_url = "https://www.aldi.us/weekly-specials/upcoming-aldi-finds/"
     
@@ -64,18 +72,23 @@ def main():
     df_current = pd.DataFrame(products_current)
     df_upcoming = pd.DataFrame(products_upcoming)
     
-    df = pd.concat([df_current, df_upcoming]).drop_duplicates()
-    df['week_start'] = df['week_date'].str.split(' - ', expand=True)[0]
-    df['week_end'] = df['week_date'].str.split(' - ', expand=True)[1]
-    df['price_clean'] = df['price'].str.replace('*', '').str.replace('$', '').astype(float)
+    df_new = pd.concat([df_current, df_upcoming]).drop_duplicates()
+    df_new['week_start'] = df_new['week_date'].str.split(' - ', expand=True)[0]
+    df_new['week_end'] = df_new['week_date'].str.split(' - ', expand=True)[1]
+    df_new['price_clean'] = df_new['price'].str.replace('*', '').str.replace('$', '').astype(float)
+
+    # Combine with archive
+    df_combined = pd.concat([df_archive, df_new]).drop_duplicates(subset=['week_date', 'link'])
     
     # Saving to CSV
-    csv_buffer = StringIO()
-    df.to_csv(csv_buffer, index=False)
+    csv_buffer_new = StringIO()
+    csv_buffer_archive = StringIO()
+    df_new.to_csv(csv_buffer_new, index=False)
+    df_combined.to_csv(csv_buffer_archive, index=False)
     
     # Upload to S3
-    s3_resource = boto3.resource('s3')
-    s3_resource.Object('stilesdata.com', f'aldi/{datetime.now().strftime("%Y-%m-%d")}_aldi_finds.csv').put(Body=csv_buffer.getvalue())
+    s3_resource.Object(bucket_name, f'aldi/{datetime.now().strftime("%Y-%m-%d")}_aldi_finds.csv').put(Body=csv_buffer_new.getvalue())
+    s3_resource.Object(bucket_name, archive_key).put(Body=csv_buffer_archive.getvalue())
 
     print("Upload completed successfully.")
 
