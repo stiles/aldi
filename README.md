@@ -44,12 +44,12 @@ The GitHub Actions workflow (`fetch_deals.yml`) automates the execution of the s
 ### Workflow Steps
 
 1. **Set up Python**: Installs Python and the required packages.
-2. **Run Scraper**: Executes the Python script to fetch data and generate the CSV file.
+2. **Run scraper**: Executes the Python script to fetch data and generate the CSV file.
 3. **Upload to S3**: The CSV file is uploaded to the specified AWS S3 bucket using credentials stored in GitHub Secrets.
 
 ## Contributing
 
-Contributions to this project are welcome! You can contribute in several ways:
+Contributions to this project are welcome. You can contribute to this CRITICAL project in several ways:
 
 - **Code pull requests**: If you have improvements or bug fixes, please submit a PR.
 - **Documentation**: Improvements to documentation or the README are greatly appreciated.
