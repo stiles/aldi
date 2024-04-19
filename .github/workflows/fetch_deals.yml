@@ -26,7 +26,7 @@ jobs:
       env: 
         AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
         AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-      run: python process_fetch.py
+      run: python fetch_process.py
 
     - name: Archive production artifacts
       uses: actions/upload-artifact@v2

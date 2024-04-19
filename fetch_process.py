@@ -1,7 +1,7 @@
-import os
 import requests
 from bs4 import BeautifulSoup
 import pandas as pd
+from io import StringIO
 import boto3
 from datetime import datetime
 
@@ -19,15 +19,31 @@ def parse_products(soup, week_date):
         category = category_header.get_text(strip=True) if category_header else "No Category"
         
         for product in section.find_all("a", class_="box--wrapper ym-gl ym-g25"):
+            description_tag = product.find("div", class_="box--description--header")
+            if description_tag:
+                parts = [desc.strip() for desc in description_tag.contents if isinstance(desc, str) and desc.strip()]
+                product_brand = parts[0] if parts else ''
+                product_description = parts[1] if len(parts) > 1 else ''
+            else:
+                product_brand, product_description = None, None
+            
+            price_value_tag = product.find("span", class_="box--value")
+            price_decimal_tag = product.find("span", class_="box--decimal")
+            asterisk_tag = product.find("span", class_="box--asterisk")
+            product_price = (price_value_tag.get_text(strip=True) if price_value_tag else "") + \
+                            (price_decimal_tag.get_text(strip=True) if price_decimal_tag else "") + \
+                            (asterisk_tag.get_text(strip=True) if asterisk_tag else "")
+            
+            image_tag = product.find("img")
+            product_image = image_tag['src'] if image_tag else None
+            
             products.append({
                 "week_date": week_date,
                 "category": category,
-                "brand": (parts := [desc.strip() for desc in (description_tag := product.find("div", class_="box--description--header")).contents if isinstance(desc, str) and desc.strip()])[0] if parts else '',
-                "description": parts[1] if len(parts) > 1 else '',
-                "price": (price_value_tag := product.find("span", class_="box--value")).get_text(strip=True) if price_value_tag else '' + 
-                         (price_decimal_tag := product.find("span", class_="box--decimal")).get_text(strip=True) if price_decimal_tag else '' + 
-                         (product.find("span", class_="box--asterisk")).get_text(strip=True) if price_value_tag else '',
-                "image": (image_tag := product.find("img"))['src'] if image_tag else None,
+                "brand": product_brand,
+                "description": product_description,
+                "price": product_price,
+                "image": product_image,
                 "link": "https://www.aldi.us" + product.get('href')
             })
     return products
@@ -39,7 +55,6 @@ def main():
     current_week_soup = fetch_data(current_finds_url)
     upcoming_week_soup = fetch_data(upcoming_finds_url)
     
-    # Assuming the first <h2> tag on the page contains the week date string
     week_date_current = current_week_soup.find("h2").get_text(strip=True)
     week_date_upcoming = upcoming_week_soup.find("h2").get_text(strip=True)
     
@@ -50,8 +65,8 @@ def main():
     df_upcoming = pd.DataFrame(products_upcoming)
     
     df = pd.concat([df_current, df_upcoming]).drop_duplicates()
-    df['week_start'] = pd.to_datetime(df['week_date'].str.split(' - ', expand=True)[0]).astype(str)
-    df['week_end'] = pd.to_datetime(df['week_date'].str.split(' - ', expand=True)[1]).astype(str)
+    df['week_start'] = df['week_date'].str.split(' - ', expand=True)[0]
+    df['week_end'] = df['week_date'].str.split(' - ', expand=True)[1]
     df['price_clean'] = df['price'].str.replace('*', '').str.replace('$', '').astype(float)
     
     # Saving to CSV
