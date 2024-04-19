@@ -1,6 +1,6 @@
 # Scraping ALDI's "Aisle of Shame"
 
-This project contains a Python script that scrapes product information from ALDI's ["finds" page](https://www.aldi.us/weekly-specials/this-weeks-aldi-finds/), which are known in the stores as the "Aisle of Shame". The project is inspired by Parija Kavilanz's [story for CNN](https://www.cnn.com/2024/04/19/business/aldi-aisle-of-shame-fans/index.html) about these middle-aisle deals. 
+This project contains a Python script that scrapes product information from ALDI's ["finds" page](https://www.aldi.us/weekly-specials/this-weeks-aldi-finds/), known in the store as the "Aisle of Shame". The project is inspired by Parija Kavilanz's [story for CNN](https://www.cnn.com/2024/04/19/business/aldi-aisle-of-shame-fans/index.html) about these middle-aisle deals. 
 
 The extracted data has details about each product, such as the brand, description, price and sales week. The script is scheduled to run weekly using GitHub Actions, which stores the output in CSV files to an AWS S3 bucket.
 
