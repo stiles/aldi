@@ -20,7 +20,7 @@ The script `fetch_process.py` is designed to be executed automatically via GitHu
 
 ## Output Data
 
-The script outputs a weekly snapshot CSV file named `<current-date>_aldi_finds.csv`, which is uploaded to an AWS S3 bucket. It also adds any new rows to an archive called [`http://stilesdata.com/aldi/aldi_finds_archive.csv`](http://stilesdata.com/aldi/aldi_finds_archive.csv). 
+The script outputs a weekly snapshot CSV file named `<current-date>_aldi_finds.csv`, which is uploaded to an AWS S3 bucket. It also adds any new rows to an archive called [`https://stilesdata.com/aldi/aldi_finds_archive.csv`](http://stilesdata.com/aldi/aldi_finds_archive.csv). 
 
 The data fields in the CSV are as follows:
 
