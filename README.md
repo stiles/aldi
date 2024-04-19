@@ -1,12 +1,12 @@
 # Scraping ALDI's "Aisle of Shame"
 
-This project contains a Python script that scrapes product information from ALDI's "finds" pages, which are known in the stores as the "Aisle of Shame". The project is inspired by Parija Kavilanz's [story for CNN](https://www.cnn.com/2024/04/19/business/aldi-aisle-of-shame-fans/index.html) about these middle-aisle deals. 
+This project contains a Python script that scrapes product information from ALDI's ["finds" page](https://www.aldi.us/weekly-specials/this-weeks-aldi-finds/), which are known in the stores as the "Aisle of Shame". The project is inspired by Parija Kavilanz's [story for CNN](https://www.cnn.com/2024/04/19/business/aldi-aisle-of-shame-fans/index.html) about these middle-aisle deals. 
 
-The data extracted includes details about each product such as the brand, description, price, and the sales week. The script is scheduled to run weekly using GitHub Actions, which stores the output in a CSV file to an AWS S3 bucket.
+The extracted data has details about each product, such as the brand, description, price and sales week. The script is scheduled to run weekly using GitHub Actions, which stores the output in CSV files to an AWS S3 bucket.
 
 ## How to Run the Script
 
-The script `fetch_process.py` is designed to be executed automatically via GitHub Actions but can also be run manually or through other automation services. To run it manually:
+The script `fetch_process.py` is designed to be executed automatically via GitHub Actions, but can also be run manually or through other automation services. To run it manually:
 
 1. Ensure Python 3.8+ is installed on your machine.
 2. Install the required Python libraries:
@@ -39,7 +39,7 @@ The data fields in the CSV are as follows:
 
 ## Automated Workflow
 
-The GitHub Actions workflow (`fetch_deals.yml`) automates the execution of the scraping script weekly. It is set up to install dependencies, run the script, and handle the file upload to AWS S3. The workflow is triggered every Sunday at midnight UTC.
+The GitHub Actions workflow (`fetch_deals.yml`) automates the execution of the scraping script weekly. It is set up to install dependencies, run the script, and handle the file upload to AWS S3. The workflow is triggered every Sunday at midnight Pacific Time.
 
 ### Workflow Steps
 
