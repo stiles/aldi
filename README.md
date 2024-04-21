@@ -26,7 +26,7 @@ This approach ensures detailed data collection of the general inventory but also
 3. **Execution**:
    ```bash
    python fetch_all_products.py  # For full catalog collection
-   python fetch_process.py       # For weekly "finds" updates
+   python fetch_aisle_products.py       # For weekly "finds" updates
    ```
 
 These scripts can be executed automatically via GitHub Actions, ensuring regular data updates without manual intervention.
@@ -46,7 +46,7 @@ The data is stored in CSV files with potential configuration for upload to AWS S
   | `formatted_price`| Formatted price with currency symbol       | "$7.99"                                  |
   | `urlSlugText`    | Slug for product URL                       | "outlander-meritage-red-wine-750-ml"     |
 
-- **Weekly Finds Output** (`fetch_process.py`):
+- **Weekly Finds Output** (`fetch_aisle_products.py`):
   | Field Name     | Description                                       | Example                            |
   |----------------|---------------------------------------------------|------------------------------------|
   | `week_date`    | The date range for which the products are listed  | "04/17/24 - 04/23/24"              |
