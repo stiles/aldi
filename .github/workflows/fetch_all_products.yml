@@ -1,4 +1,4 @@
-name: Fetch all products
+name: Fetch ALL products
 
 on:
   schedule:
