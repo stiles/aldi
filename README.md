@@ -1,60 +1,83 @@
-# Scraping ALDI's "Aisle of Shame"
+# ALDI product data collection
 
-This project contains a Python script that scrapes product information from ALDI's "This Week's ALDI Finds" and "Upcoming ALDI Finds" web pages. 
+This project automates the scraping of product information from ALDI's website, initially focusing on the ["Aisle of Shame" or "finds"](https://www.aldi.us/weekly-specials/this-weeks-aldi-finds/), and now expanded to encompass a full catalog of products available. 
 
-The data extracted includes details about each product such as the brand, description, price, and the sales week. The script is scheduled to run weekly using GitHub Actions, which stores the output in a CSV file to an AWS S3 bucket.
+Initially inspired by Parija Kavilanz's [CNN story](https://www.cnn.com/2024/04/19/business/aldi-aisle-of-shame-fans/index.html) about ALDI's popular middle-aisle deals, it has since grown to include a complete dataset capturing every product for more comprehensive analysis and accessibility.
 
-## How to Run the Script
+*The project — and its documentation — are still a work in progress.*
 
-The script `fetch_process.py` is designed to be executed automatically via GitHub Actions but can also be run manually or through other automation services. To run it manually:
+## Project overview
 
-1. Ensure Python 3.8+ is installed on your machine.
-2. Install the required Python libraries:
+The project utilizes two scripts: `fetch_all_products.py` for capturing the full product catalog and `fetch_aisle_products.py` for weekly updates of the supermarket chain's "finds" collection. 
+
+This approach ensures detailed data collection of the general inventory but also a specific and regularly updating slice of data detailing the company's "Aisle of Shame" deals. 
+
+### How to run the scripts
+
+1. **Prerequisites**:
+   - Python 3.8+ installed on your machine.
+   - Necessary Python packages: `requests`, `pandas`, `tqdm` for full catalog collection; `beautifulsoup4`, `boto3` for weekly specials.
+
+2. **Setup**:
+   ```bash
+   pip install requests pandas tqdm beautifulsoup4 boto3
    ```
-   pip install requests beautifulsoup4 pandas boto3
+
+3. **Execution**:
+   ```bash
+   python fetch_all_products.py  # For full catalog collection
+   python fetch_process.py       # For weekly "finds" updates
    ```
-3. Run the script:
-   ```
-   python fetch_process.py
-   ```
 
-## Output Data
+These scripts can be executed automatically via GitHub Actions, ensuring regular data updates without manual intervention.
 
-The script outputs a weekly snapshot CSV file named `<current-date>_aldi_finds.csv`, which is uploaded to an AWS S3 bucket. It also adds any new rows to an archive called [`https://stilesdata.com/aldi/aldi_finds_archive.csv`](https://stilesdata.com/aldi/aldi_finds_archive.csv). 
+## Outputs
 
-The data fields in the CSV are as follows:
+The data is stored in CSV files with potential configuration for upload to AWS S3 or other specified services. The outputs differ as follows:
 
-| Field Name     | Description                                       | Example                            |
-|----------------|---------------------------------------------------|------------------------------------|
-| `week_date`    | The date range for which the products are listed  | "04/17/24 - 04/23/24"              |
-| `category`     | Category of the product                           | "Home Goods"                       |
-| `brand`        | Brand of the product                              | "Huntington Home"                  |
-| `description`  | Description of the product                        | "Luxury 2 Wick Candle"             |
-| `price`        | Price of the product                              | "$4.99*"                           |
-| `image`        | URL of the product image                          | "https://www.aldi.us/.../candle.jpg" |
-| `link`         | URL to the product detail page                    | "https://www.aldi.us/.../candle/"   |
-| `week_start`   | Start date of the week for the product listing    | "04/17/24"                         |
-| `week_end`     | End date of the week for the product listing      | "04/23/24"                         |
-| `price_clean`  | Numeric price of the product                      | 4.99                               |
+- **Full Catalog Output** (`fetch_all_products.py`):
+  | Field Name       | Description                                | Example                                  |
+  |------------------|--------------------------------------------|------------------------------------------|
+  | `name`           | Product name                               | "Meritage Red Wine, 750 ml"              |
+  | `sku`            | Stock Keeping Unit identifier              | "0000000000000002"                       |
+  | `price`          | Product price                              | "$7.99"                                  |
+  | `description`    | Description of the product                 | "Blend of plum, anise, blackberry..."    |
+  | `category`       | Product category                           | "Alcohol, Red Wine"                      |
+  | `formatted_price`| Formatted price with currency symbol       | "$7.99"                                  |
+  | `urlSlugText`    | Slug for product URL                       | "outlander-meritage-red-wine-750-ml"     |
 
-## Automated Workflow
+- **Weekly Finds Output** (`fetch_process.py`):
+  | Field Name     | Description                                       | Example                            |
+  |----------------|---------------------------------------------------|------------------------------------|
+  | `week_date`    | The date range for which the products are listed  | "04/17/24 - 04/23/24"              |
+  | `category`     | Category of the product                           | "Home Goods"                       |
+  | `brand`        | Brand of the product                              | "Huntington Home"                  |
+  | `description`  | Description of the product                        | "Luxury 2 Wick Candle"             |
+  | `price`        | Price of the product                              | "$4.99*"                           |
+  | `image`        | URL of the product image                          | "https://www.aldi.us/.../candle.jpg" |
+  | `link`         | URL to the product detail page                    | "https://www.aldi.us/.../candle/"   |
+  | `week_start`   | Start date of the week for the product listing    | "04/17/24"                         |
+  | `week_end`     | End date of the week for the product listing      | "04/23/24"                         |
+  | `price_clean`  | Numeric price of the product                      | 4.99                               |
 
-The GitHub Actions workflow (`fetch_deals.yml`) automates the execution of the scraping script weekly. It is set up to install dependencies, run the script, and handle the file upload to AWS S3. The workflow is triggered every Sunday at midnight UTC.
+## Automated workflow with GitHub Actions
 
-### Workflow Steps
+The GitHub Actions workflows (`scheduled_data_fetch.yml` for the full catalog and `fetch_deals.yml` for the weekly finds) automate the execution of the scraping scripts on a regular basis (e.g., weekly). These workflows include steps to set up Python, install dependencies, execute the scripts, and handle data storage.
+
+### Workflow steps
 
 1. **Set up Python**: Installs Python and the required packages.
-2. **Run Scraper**: Executes the Python script to fetch data and generate the CSV file.
-3. **Upload to S3**: The CSV file is uploaded to the specified AWS S3 bucket using credentials stored in GitHub Secrets.
+2. **Run Scraper**: Executes the Python scripts to fetch data and generate the output files.
+3. **Upload Data**: The CSV files are uploaded to an AWS S3 bucket or another configured storage service.
 
 ## Contributing
 
-Contributions to this project are welcome! You can contribute in several ways:
+Contributions to this project are welcome, especially in the following areas:
 
-- **Code pull requests**: If you have improvements or bug fixes, please submit a PR.
-- **Documentation**: Improvements to documentation or the README are greatly appreciated.
-- **Feature suggestions**: Have an idea? Submit it as an issue!
+- **Code Enhancements**: Suggestions for improving the scraping efficiency or expanding data collection features.
+- **Documentation**: Updates to README or additional guidelines for users.
+- **Feature Requests**: Ideas for new features or data points to collect.
 
 ## License
 
-This project is released under the MIT License. See the [LICENSE](LICENSE) file for details.
+This project is released under the MIT License. See the [LICENSE](LICENSE) file for more details.

@@ -1,0 +1,48 @@
+name: Fetch all products
+
+on:
+  push:
+    branches:
+      - main
+  schedule:
+    - cron:  '0 0 * * SUN'  # Scheduled to run every Sunday at midnight
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.8'
+
+    - name: Install dependencies
+      run: |
+        pip install requests pandas tqdm boto3
+
+    - name: Run Script to Fetch and Upload Data
+      env:
+        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        AWS_DEFAULT_REGION: 'us-west-1'
+      run: |
+        python fetch_all_products.py
+
+    - name: Upload CSV to S3
+      env:
+        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        AWS_DEFAULT_REGION: 'us-west-1' 
+      run: |
+        aws s3 cp aldi_products_detailed_latest.csv s3://stilesdata.com/aldi/ --acl public-read
+
+    - name: Upload JSON to S3
+      env:
+        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        AWS_DEFAULT_REGION: 'us-west-1'  
+      run: |
+        aws s3 cp aldi_products_detailed_latest.json s3://stilesdata.com/aldi/ --acl public-read
