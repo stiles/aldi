@@ -35,16 +35,23 @@ These scripts can be executed automatically via GitHub Actions, ensuring regular
 
 The data is stored in CSV files with potential configuration for upload to AWS S3 or other specified services. The outputs differ as follows:
 
-- **Full catalog output** (via `fetch_all_products.py`): [JSON](data/processed/aldi_products_detailed.json) | [CSV](data/processed/aldi_products_detailed.json)
-  | Field Name       | Description                                | Example                                  |
-  |------------------|--------------------------------------------|------------------------------------------|
-  | `name`           | Product name                               | "Meritage Red Wine, 750 ml"              |
-  | `sku`            | Stock Keeping Unit identifier              | "0000000000000002"                       |
-  | `price`          | Product price                              | "$7.99"                                  |
-  | `description`    | Description of the product                 | "Blend of plum, anise, blackberry..."    |
-  | `category`       | Product category                           | "Alcohol, Red Wine"                      |
-  | `formatted_price`| Formatted price with currency symbol       | "$7.99"                                  |
-  | `urlSlugText`    | Slug for product URL                       | "outlander-meritage-red-wine-750-ml"     |
+- **Full catalog output** (via `fetch_all_products.py`): [JSON](https://stilesdata.com/aldi/aldi_products_detailed.json) | [CSV](https://stilesdata.com/aldi/aldi_products_detailed.csv)
+| Field Name        | Description                                             | Example                                               |
+|-------------------|---------------------------------------------------------|-------------------------------------------------------|
+| `sku`             | Stock Keeping Unit identifier                           | "0000000000000005"                                    |
+| `name`            | Product name                                            | "Original Kettle Chips, 8 oz"                         |
+| `brand_name`      | Product brand name                                      | "Clancy's"                                            |
+| `price_unit`      | Product price unit                                      | "oz"                                                  |
+| `price`           | Product price                                           | "$7.99"                                               |
+| `description`     | Description of the product                              | "Complete a tasty lunch with a handful ..."           |
+| `categories`      | Product categories (parent, children)                   | "Snacks, Chips, Crackers & Popcorn"                   |
+| `country_origin`  | Product origin country                                  | "USA and Imported"                                    |
+| `snap_eligible`   | Supplemental Nutrition Assistance Program eligible      | "True"                                                |
+| `formatted_price` | Formatted price with currency symbol                    | "$2.15"                                               |
+| `slug`            | Slug for product URL                                    | "clancy-s-original-kettle-chips-8-oz"                 |
+| `image_url`       | URL for product image                                   | "https://dm.cms.aldi.cx/is/image/...{slug}"           |
+| `warning_code`    | Health warnings in CA                                   | "ca_prop_65"                                          |
+| `warning_desc`    | Description of health warning                           | "Consuming this product can expose you to ..."        |
 
 
 - **Weekly finds output** (via `fetch_aisle_products.py`): : [JSON](data/processed/aldi_finds_latest.json) | [CSV](data/processed/aldi_finds_latest.csv)

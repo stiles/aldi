@@ -47,7 +47,7 @@ def parse_products(soup, week_date):
 def main():
     s3_resource = boto3.resource('s3')
     bucket_name = 'stilesdata.com'
-    archive_key = 'aldi/aldi_finds_archive.csv'
+    archive_key = 'aldi/aldi_finds_latest.csv'
 
     # Try to load the existing archive
     try:
@@ -79,16 +79,27 @@ def main():
 
     # Combine with archive
     df_combined = pd.concat([df_archive, df_new]).drop_duplicates(subset=['week_date', 'link'])
-    
-    # Saving to CSV
+
+    # Saving to CSV and JSON
     csv_buffer_new = StringIO()
+    json_buffer_new = StringIO()
     csv_buffer_archive = StringIO()
+    json_buffer_archive = StringIO()
     df_new.to_csv(csv_buffer_new, index=False)
+    df_new.to_json(json_buffer_new, orient='records', lines=True)
     df_combined.to_csv(csv_buffer_archive, index=False)
+    df_combined.to_json(json_buffer_archive, orient='records', lines=True)
     
     # Upload to S3
-    s3_resource.Object(bucket_name, f'aldi/{datetime.now().strftime("%Y-%m-%d")}_aldi_finds.csv').put(Body=csv_buffer_new.getvalue())
-    s3_resource.Object(bucket_name, archive_key).put(Body=csv_buffer_archive.getvalue())
+    new_csv_key = f'aldi/{datetime.now().strftime("%Y-%m-%d")}_aldi_finds.csv'
+    new_json_key = f'aldi/{datetime.now().strftime("%Y-%m-%d")}_aldi_finds.json'
+    archive_csv_key = 'aldi/aldi_finds_latest.csv'
+    archive_json_key = 'aldi/aldi_finds_latest.json'
+    
+    s3_resource.Object(bucket_name, new_csv_key).put(Body=csv_buffer_new.getvalue())
+    s3_resource.Object(bucket_name, new_json_key).put(Body=json_buffer_new.getvalue())
+    s3_resource.Object(bucket_name, archive_csv_key).put(Body=csv_buffer_archive.getvalue())
+    s3_resource.Object(bucket_name, archive_json_key).put(Body=json_buffer_archive.getvalue())
 
     print("Upload completed successfully.")
 
