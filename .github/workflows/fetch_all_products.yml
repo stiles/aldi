@@ -34,7 +34,7 @@ jobs:
         AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         AWS_DEFAULT_REGION: 'us-west-1' 
       run: |
-        aws s3 cp aldi_products_detailed_latest.csv s3://stilesdata.com/aldi/ --acl public-read
+        aws s3 cp data/processed/aldi_products_detailed.csv s3://stilesdata.com/aldi/ --acl public-read
 
     - name: Upload JSON to S3
       env:
@@ -42,4 +42,4 @@ jobs:
         AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         AWS_DEFAULT_REGION: 'us-west-1'  
       run: |
-        aws s3 cp aldi_products_detailed_latest.json s3://stilesdata.com/aldi/ --acl public-read
+        aws s3 cp data/processed/aldi_products_detailed.json s3://stilesdata.com/aldi/ --acl public-read
