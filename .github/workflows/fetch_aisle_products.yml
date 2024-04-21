@@ -3,6 +3,7 @@ name: Fetch FINDS products
 on:
     schedule:
         - cron: '0 7 * * 0'  # Runs at midnight PST on Sundays
+    workflow_dispatch:
     
 
 jobs:
