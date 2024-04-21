@@ -35,7 +35,7 @@ These scripts can be executed automatically via GitHub Actions, ensuring regular
 
 The data is stored in CSV files with potential configuration for upload to AWS S3 or other specified services. The outputs differ as follows:
 
-- **Full Catalog Output** (`fetch_all_products.py`):
+- **Full catalog output** (via `fetch_all_products.py`): [JSON](data/processed/aldi_products_detailed.json) | [CSV](data/processed/aldi_products_detailed.json)
   | Field Name       | Description                                | Example                                  |
   |------------------|--------------------------------------------|------------------------------------------|
   | `name`           | Product name                               | "Meritage Red Wine, 750 ml"              |
@@ -46,7 +46,8 @@ The data is stored in CSV files with potential configuration for upload to AWS S
   | `formatted_price`| Formatted price with currency symbol       | "$7.99"                                  |
   | `urlSlugText`    | Slug for product URL                       | "outlander-meritage-red-wine-750-ml"     |
 
-- **Weekly Finds Output** (`fetch_aisle_products.py`):
+
+- **Weekly finds output** (via `fetch_aisle_products.py`): : [JSON](data/processed/aldi_finds_latest.json) | [CSV](data/processed/aldi_finds_latest.csv)
   | Field Name     | Description                                       | Example                            |
   |----------------|---------------------------------------------------|------------------------------------|
   | `week_date`    | The date range for which the products are listed  | "04/17/24 - 04/23/24"              |
@@ -62,7 +63,7 @@ The data is stored in CSV files with potential configuration for upload to AWS S
 
 ## Automated workflow with GitHub Actions
 
-The GitHub Actions workflows (`scheduled_data_fetch.yml` for the full catalog and `fetch_deals.yml` for the weekly finds) automate the execution of the scraping scripts on a regular basis (e.g., weekly). These workflows include steps to set up Python, install dependencies, execute the scripts, and handle data storage.
+The GitHub Actions workflows (`fetch_all_products.yml` for the full catalog and `fetch_aisle_products.yml` for the weekly finds) automate the execution of the scraping scripts on a regular basis (overnight on Sundays). These workflows include steps to set up Python, install dependencies, execute the scripts and handle data storage.
 
 ### Workflow steps
 
