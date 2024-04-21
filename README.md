@@ -1,16 +1,12 @@
 # ALDI product data collection
 
-This project automates the scraping of product information from ALDI's website, initially focusing on the ["Aisle of Shame" or "finds"](https://www.aldi.us/weekly-specials/this-weeks-aldi-finds/), and now expanded to encompass a full catalog of products available. 
-
-Initially inspired by Parija Kavilanz's [CNN story](https://www.cnn.com/2024/04/19/business/aldi-aisle-of-shame-fans/index.html) about ALDI's popular middle-aisle deals, it has since grown to include a complete dataset capturing every product for more comprehensive analysis and accessibility.
+This project automates the scraping and storing at regular intervals of grocery product information from ALDI's website, including the full inventory and items included in the supermarket chain's ["Aisle of Shame" or "finds"](https://www.aldi.us/weekly-specials/this-weeks-aldi-finds/) category. It was inspired by Parija Kavilanz's [CNN story](https://www.cnn.com/2024/04/19/business/aldi-aisle-of-shame-fans/index.html). 
 
 *The project — and its documentation — are still a work in progress.*
 
 ## Project overview
 
-The project utilizes two scripts: `fetch_all_products.py` for capturing the full product catalog and `fetch_aisle_products.py` for weekly updates of the supermarket chain's "finds" collection. 
-
-This approach ensures detailed data collection of the general inventory but also a specific and regularly updating slice of data detailing the company's "Aisle of Shame" deals. 
+The project utilizes two scripts: `fetch_all_products.py` for capturing the full product catalog using the supermarket's API and `fetch_aisle_products.py` for weekly updates from the "[finds](https://www.aldi.us/weekly-specials/this-weeks-aldi-finds/)" pages. It's updated weekly and snapshots of past files are stored on AWS S3. 
 
 ### How to run the scripts
 
@@ -33,9 +29,10 @@ These scripts can be executed automatically via GitHub Actions, ensuring regular
 
 ## Outputs
 
-The data is stored in CSV files with potential configuration for upload to AWS S3 or other specified services. The outputs differ as follows:
+The data is stored in CSV and JSON files with configuration for upload to AWS S3 or other specified services. The outputs include:
 
 - **Full catalog output** (via `fetch_all_products.py`): [JSON](https://stilesdata.com/aldi/aldi_products_detailed.json) | [CSV](https://stilesdata.com/aldi/aldi_products_detailed.csv)
+
 | Field Name        | Description                                             | Example                                               |
 |-------------------|---------------------------------------------------------|-------------------------------------------------------|
 | `sku`             | Stock Keeping Unit identifier                           | "0000000000000005"                                    |
@@ -54,7 +51,8 @@ The data is stored in CSV files with potential configuration for upload to AWS S
 | `warning_desc`    | Description of health warning                           | "Consuming this product can expose you to ..."        |
 
 
-- **Weekly finds output** (via `fetch_aisle_products.py`): : [JSON](data/processed/aldi_finds_latest.json) | [CSV](data/processed/aldi_finds_latest.csv)
+- **Weekly finds output** (via `fetch_aisle_products.py`): [JSON](https://stilesdata.com/aldi/aldi_finds_latest.json) | [CSV](https://stilesdata.com/aldi/aldi_finds_latest.csv)
+
   | Field Name     | Description                                       | Example                            |
   |----------------|---------------------------------------------------|------------------------------------|
   | `week_date`    | The date range for which the products are listed  | "04/17/24 - 04/23/24"              |
@@ -70,21 +68,23 @@ The data is stored in CSV files with potential configuration for upload to AWS S
 
 ## Automated workflow with GitHub Actions
 
-The GitHub Actions workflows (`fetch_all_products.yml` for the full catalog and `fetch_aisle_products.yml` for the weekly finds) automate the execution of the scraping scripts on a regular basis (overnight on Sundays). These workflows include steps to set up Python, install dependencies, execute the scripts and handle data storage.
+The GitHub Actions workflows (`fetch_all_products.yml` for the full catalog and `fetch_aisle_products.yml` for the weekly finds) automate the execution of the scraping scripts on a regular basis (overnight on Sundays). 
+
+These workflows include steps to set up Python, install dependencies, execute the scripts and handle data storage.
 
 ### Workflow steps
 
 1. **Set up Python**: Installs Python and the required packages.
-2. **Run Scraper**: Executes the Python scripts to fetch data and generate the output files.
-3. **Upload Data**: The CSV files are uploaded to an AWS S3 bucket or another configured storage service.
+2. **Run scraper**: Executes the Python scripts to fetch data and generate the output files.
+3. **Upload data**: The CSV files are uploaded to an AWS S3 bucket or another configured storage service.
 
 ## Contributing
 
 Contributions to this project are welcome, especially in the following areas:
 
-- **Code Enhancements**: Suggestions for improving the scraping efficiency or expanding data collection features.
+- **Code enhancements**: Suggestions for improving the scraping efficiency or expanding data collection features.
 - **Documentation**: Updates to README or additional guidelines for users.
-- **Feature Requests**: Ideas for new features or data points to collect.
+- **Feature requests**: Ideas for new features or data points to collect or ways to visualize what's been collected.
 
 ## License
 
