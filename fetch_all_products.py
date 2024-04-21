@@ -95,9 +95,10 @@ def main():
     
     # Directories and file paths
     local_dir = "data/processed/"
+    archive_dir = "data/processed/archive/"
     os.makedirs(local_dir, exist_ok=True)
-    csv_file = f"{local_dir}aldi_products_detailed_{today}.csv"
-    json_file = f"{local_dir}aldi_products_detailed_{today}.json"
+    csv_file = f"{archive_dir}aldi_products_detailed_{today}.csv"
+    json_file = f"{archive_dir}aldi_products_detailed_{today}.json"
     
     all_products_df = fetch_all_products()
     detailed_info = []
