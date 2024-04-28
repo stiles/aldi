@@ -28,18 +28,18 @@ jobs:
       run: |
         python fetch_all_products.py
 
-    - name: Upload CSV to S3
-      env:
-        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        AWS_DEFAULT_REGION: 'us-west-1' 
-      run: |
-        aws s3 cp data/processed/aldi_products_detailed_latest.csv s3://stilesdata.com/aldi/
+    # - name: Upload CSV to S3
+    #   env:
+    #     AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+    #     AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+    #     AWS_DEFAULT_REGION: 'us-west-1' 
+    #   run: |
+    #     aws s3 cp data/processed/aldi_products_detailed_latest.csv s3://stilesdata.com/aldi/
 
-    - name: Upload JSON to S3
-      env:
-        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        AWS_DEFAULT_REGION: 'us-west-1'  
-      run: |
-        aws s3 cp data/processed/aldi_products_detailed_latest.json s3://stilesdata.com/aldi/
+    # - name: Upload JSON to S3
+    #   env:
+    #     AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+    #     AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+    #     AWS_DEFAULT_REGION: 'us-west-1'  
+    #   run: |
+    #     aws s3 cp data/processed/aldi_products_detailed_latest.json s3://stilesdata.com/aldi/
