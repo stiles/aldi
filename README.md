@@ -31,7 +31,7 @@ These scripts can be executed automatically via GitHub Actions, ensuring regular
 
 The data is stored in CSV and JSON files with configuration for upload to AWS S3 or other specified services. The outputs include:
 
-- **Full catalog output** (via `fetch_all_products.py`): [JSON](https://stilesdata.com/aldi/aldi_products_detailed.json) | [CSV](https://stilesdata.com/aldi/aldi_products_detailed.csv)
+- **Full catalog output** (via `fetch_all_products.py`): [JSON](https://stilesdata.com/aldi/aldi_products_detailed_latest.json) | [CSV](https://stilesdata.com/aldi/aldi_products_detailed_latest.csv)
 
 | Field Name        | Description                                             | Example                                               |
 |-------------------|---------------------------------------------------------|-------------------------------------------------------|
