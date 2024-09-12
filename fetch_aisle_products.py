@@ -86,9 +86,9 @@ def main():
     csv_buffer_archive = StringIO()
     json_buffer_archive = StringIO()
     df_new.to_csv(csv_buffer_new, index=False)
-    df_new.to_json(json_buffer_new, orient='records')
+    df_new.to_json(json_buffer_new, indent=4, orient='records')
     df_combined.to_csv(csv_buffer_archive, index=False)
-    df_combined.to_json(json_buffer_archive, orient='records')
+    df_combined.to_json(json_buffer_archive, indent=4, orient='records')
     
     # Upload to S3
     new_csv_key = f'aldi/{datetime.now().strftime("%Y-%m-%d")}_aldi_finds.csv'
