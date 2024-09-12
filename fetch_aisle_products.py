@@ -75,7 +75,7 @@ def main():
     df_new = pd.concat([df_current, df_upcoming]).drop_duplicates()
     df_new['week_start'] = df_new['week_date'].str.split(' - ', expand=True)[0]
     df_new['week_end'] = df_new['week_date'].str.split(' - ', expand=True)[1]
-    df_new['price_clean'] = df_new['price'].str.replace('*', '').str.replace('$', '').astype(float)
+    df_new['price_clean'] = pd.to_numeric(df_new['price'].str.replace('*', '').str.replace('$', ''), errors='coerce')
 
     # Combine with archive
     df_combined = pd.concat([df_archive, df_new]).drop_duplicates(subset=['week_date', 'link'])
