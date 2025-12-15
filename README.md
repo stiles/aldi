@@ -11,18 +11,18 @@ The project utilizes two scripts: `fetch_all_products.py` for capturing the full
 ### How to run the scripts
 
 1. **Prerequisites**:
-   - Python 3.8+ installed on your machine.
-   - Necessary Python packages: `requests`, `pandas`, `tqdm` for full catalog collection; `beautifulsoup4`, `boto3` for weekly specials.
+   - Python 3.9+ installed on your machine.
+   - [uv](https://docs.astral.sh/uv/) package manager.
 
 2. **Setup**:
    ```bash
-   pip install requests pandas tqdm beautifulsoup4 boto3
+   uv sync
    ```
 
 3. **Execution**:
    ```bash
-   python fetch_all_products.py  # For full catalog collection
-   python fetch_aisle_products.py       # For weekly "finds" updates
+   uv run python fetch_all_products.py  # For full catalog collection
+   uv run python fetch_aisle_products.py  # For weekly "finds" updates
    ```
 
 These scripts can be executed automatically via GitHub Actions, ensuring regular data updates without manual intervention.

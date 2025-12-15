@@ -1,0 +1,41 @@
+[project]
+name = "aldi"
+version = "0.1.0"
+description = "ALDI product data collection"
+requires-python = ">=3.9"
+dependencies = [
+    "lxml",
+    "html5lib",
+    "xlrd",
+    "pandas",
+    "jupyter",
+    "openpyxl",
+    "jupyterlab",
+    "altair",
+    "pageviewapi",
+    "jenkspy",
+    "census-data-downloader",
+    "cython",
+    "geopandas",
+    "bs4",
+    "rtree",
+    "pygeos",
+    "ipywidgets",
+    "ipympl",
+    "matplotlib",
+    "plotly",
+    "cartopy",
+    "jupyter-black",
+    "seaborn",
+    "tikapi",
+    "boto3",
+    "pyarrow",
+    "fastparquet",
+    "altair-stiles",
+    "tqdm",
+    "altair-saver",
+    "vl-convert-python",
+    "scikit-learn",
+    "requests",
+]
+
